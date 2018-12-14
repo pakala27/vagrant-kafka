@@ -1,7 +1,10 @@
 - name: Install Java
   yum:
-    name: "java-1.8.0-openjdk"
+    name: {{ item }}
     state: latest
+  with_items:
+      - java-1.8.0-openjdk
+      - java-1.8.0-openjdk-devel
 - name: Disable Require TTY in Sudoers (required for ansible synchronize)
   lineinfile:
     path: /etc/sudoers

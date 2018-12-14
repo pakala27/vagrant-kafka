@@ -2,14 +2,6 @@
   tasks:
   - import_role:
       name: confluent.preflight
-    tags:
-      - pre-install
-- hosts: ssl_CA
-  tasks:
-  - import_role:
-      name: confluent.ssl_CA
-    tags:
-      - pre-install
 - hosts: zookeeper
   tasks:
   - import_role:
@@ -32,15 +24,9 @@
       name: confluent.ksql
 - hosts: control-center
   tasks:
-  - import_role:
+  - import_role: 
       name: confluent.control-center
 - hosts: kafka-rest
   tasks:
   - import_role:
       name: confluent.kafka-rest
-- hosts: tools
-  tasks:
-  - import_role:
-      name: confluent.tools
-    tags:
-      - post-install
