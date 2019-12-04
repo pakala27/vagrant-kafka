@@ -11,7 +11,7 @@ preflight:
     node3.example.com:
 zookeeper:
   hosts:
-    node1.example.com:
+    node3.example.com:
 broker:
   hosts:
     node1.example.com:
@@ -22,13 +22,9 @@ broker:
       kafka:
         broker:
           id: 2
-    node3.example.com:
-      kafka:
-        broker:
-          id: 3
 schema-registry:
   hosts:
-    node2.example.com:
+    node3.example.com:
 control-center:
   hosts:
     node3.example.com:
@@ -39,10 +35,10 @@ control-center:
               confluent.controlcenter.connect.cluster: node3.example.com:8083
 connect-distributed:
   hosts:
-    node2.example.com:
+    node3.example.com:
 kafka-rest:
   hosts:
     node3.example.com:
-ksql:
-  hosts:
-    node1.example.com:
+# ksql:
+#   hosts:
+#     node3.example.com:
