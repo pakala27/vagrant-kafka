@@ -4,3 +4,10 @@
     state: restarted
 - name: reload systemd
   command: systemctl daemon-reload
+
+- name: wait for service restart
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: "{{ zookeeper.clientPort }}"
+    timeout: 300
+    delay: 10

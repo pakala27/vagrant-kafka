@@ -1,3 +1,21 @@
+zookeeper:
+  user: cp-kafka
+  group: confluent
+  config_file: /etc/kafka/zookeeper.properties
+  environment_file: /etc/kafka/zookeeper.envFile
+  jmx_exporter_config: /etc/kafka/zookeeper_jmx_exporter.yml
+  service_name: confluent-zookeeper
+  systemd_file: /usr/lib/systemd/system/confluent-zookeeper.service
+  log_dir: /var/log/confluent/zookeeper
+  data_dir: /var/lib/zookeeper
+  heap_opts: "-Xmx1000M"
+  clientPort: 2181
+  leaderPort: 2888
+  electionPort: 3888
+  port_jmx: 12181
+  systemd:
+    enabled: yes
+    state: started
 prometheus:
   node_exporter_service_name: prometheus_node_exporter
   node_exporter_systemd_file: /usr/lib/systemd/system/prometheus_node_exporter.service
