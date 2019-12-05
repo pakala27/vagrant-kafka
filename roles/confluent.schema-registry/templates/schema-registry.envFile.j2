@@ -1,0 +1,4 @@
+## Maintained by Ansible
+SCHEMA_REGISTRY_OPTS="-javaagent:{{ prometheus.local_path }}/jmx_prometheus_javaagent-{{ prometheus.jmx_exporter_version }}.jar={{schemaregistry.port_jmx}}:{{schemaregistry.jmx_exporter_config}}"
+LOG_DIR={{schemaregistry.log_dir}}
+SCHEMA_REGISTRY_HEAP_OPTS={{schemaregistry.heap_opts}}

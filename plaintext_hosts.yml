@@ -7,8 +7,11 @@ all:
 preflight:
   hosts:
     node1.example.com:
+      ip: 192.168.50.20
     node2.example.com:
+      ip: 192.168.50.20
     node3.example.com:
+      ip: 192.168.50.20
 zookeeper:
   hosts:
     node3.example.com:

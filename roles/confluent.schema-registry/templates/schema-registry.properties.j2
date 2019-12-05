@@ -1,4 +1,8 @@
 # Maintained by Ansible
-kafkastore.bootstrap.servers={% for host in groups['broker'] %}{% if loop.index > 1%},{% endif %}PLAINTEXT://{{ host }}:{{broker.config.port}}{% endfor %}
+kafkastore.bootstrap.servers={% for host in groups['broker'] %}{% if loop.index > 1%},{% endif %}PLAINTEXT://{{ host }}:{{kafkabroker.port_sasl_plaintext}}{% endfor %}
 
-{% include './includes/base_schema-registry.properties.j2' %}
+listeners: http://0.0.0.0:{{schemaregistry.port}}
+kafkastore.topic: _schemas
+debug: false
+avro.compatibility.level=backward
+kafkastore.ssl.endpoint.identification.algorithm: ""

@@ -7,6 +7,6 @@
 - name: wait for service restart
   wait_for:
     host: "{{ inventory_hostname }}"
-    port: "{{ kafkabroker.port_sasl_plaintext }}"
+    port: "{{ kafkabroker.port_plaintext }}"
     timeout: 300
     delay: 10

@@ -36,6 +36,24 @@ kafkabroker:
     enabled: yes
     state: started
 
+schemaregistry:
+  user: cp-schema-registry
+  group: confluent
+  port: 8081
+  port_jmx: 18081
+  config_file: /etc/schema-registry/schema-registry.properties
+  systemd_file: /usr/lib/systemd/system/confluent-schema-registry.service
+  jmx_exporter_config: /etc/schema-registry/schema-registry_jmx_exporter.yml
+  jaas_conf: /etc/schema-registry/schema-registry_jaas.conf
+  environment_file: /etc/schema-registry/schema-registry.envFile
+  service_name: confluent-schema-registry
+  log_dir: /var/log/confluent/schema-registry
+  heap_opts: -Xmx1g
+  firewalld_file: /etc/firewalld/services/confluent-schema-registry.xml
+  systemd:
+    enabled: yes
+    state: started
+
 prometheus:
   node_exporter_service_name: prometheus_node_exporter
   node_exporter_systemd_file: /usr/lib/systemd/system/prometheus_node_exporter.service
