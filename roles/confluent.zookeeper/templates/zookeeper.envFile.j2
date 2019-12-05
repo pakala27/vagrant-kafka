@@ -1,0 +1,4 @@
+## Maintained by Ansible
+KAFKA_OPTS="-javaagent:{{ prometheus.local_path }}/jmx_prometheus_javaagent-{{ prometheus.jmx_exporter_version }}.jar={{zookeeper.port_jmx}}:{{zookeeper.jmx_exporter_config}}"
+KAFKA_HEAP_OPTS={{zookeeper.heap_opts}}
+LOG_DIR={{zookeeper.log_dir}}

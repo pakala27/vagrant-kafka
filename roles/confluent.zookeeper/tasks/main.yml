@@ -1,19 +1,46 @@
 - name: zookeeper create group
   group:
     name: "{{zookeeper.group}}"
+
 - name: zookeeper create user
   user:
     name: "{{zookeeper.user}}"
     comment: "Zookeeper User"
     system: yes
     group: "{{zookeeper.group}}"
+    
+- name: zookeeper create data directory
+  file:
+    path: "{{zookeeper.data_dir}}"
+    owner: "{{zookeeper.user}}"
+    group: "{{zookeeper.group}}"
+    state: directory
+    mode: 0755
+
+- name: zookeeper create log directory
+  file:
+    path: "{{zookeeper.log_dir}}"
+    owner: "{{zookeeper.user}}"
+    group: "{{zookeeper.group}}"
+    state: directory
+    mode: 
+    
+- name: zookeeper chown data directory
+  file:
+    path: "{{zookeeper.data_dir}}"
+    owner: "{{zookeeper.user}}"
+    group: "{{zookeeper.group}}"
+    state: directory
+    mode: 0755
+
 - name: zookeeper myid file
   template:
     src: myid.j2
-    dest: "{{zookeeper.config.dataDir}}/myid"
+    dest: "{{zookeeper.data_dir}}/myid"
     mode: 0555
     owner: "{{zookeeper.user}}"
     group: "{{zookeeper.group}}"
+
 - name: zookeeper create config
   template:
     src: zookeeper.properties.j2
@@ -21,23 +48,51 @@
     mode: 0400
     owner: "{{zookeeper.user}}"
     group: "{{zookeeper.group}}"
-- name: create systemd override file
-  file:
-    path: "{{zookeeper.systemd_override}}"
-    owner: "{{zookeeper.user}}"
-    group: "{{zookeeper.group}}"
-    state: directory
-    mode: 0640
-- name: write environment variables
+  notify:
+    - restart zookeeper
+    - wait for service restart
+
+- name: zookeeper jmx exporter config
   template:
-    src: environment.j2
-    dest: "{{zookeeper.systemd_override}}/override.conf"
-    mode: 0640
+    src: "zookeeper_jmx_exporter.yml.j2"
+    dest: "{{zookeeper.jmx_exporter_config}}"
+    mode: 0400
     owner: "{{zookeeper.user}}"
     group: "{{zookeeper.group}}"
   notify:
-    - reload systemd
     - restart zookeeper
+    - wait for service restart
+
+- name: zookeeper environment file
+  template:
+    src: zookeeper.envFile.j2
+    dest: "{{zookeeper.environment_file}}"
+    mode: 0400
+    owner: "{{zookeeper.user}}"
+    group: "{{zookeeper.group}}"
+  notify:
+    - restart zookeeper
+    - wait for service restart
+
+- name: zookeeper configure service - ini file
+  ini_file:
+    path: "{{zookeeper.systemd_file}}"
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    backup: yes
+    no_extra_spaces: yes
+  notify:
+    - restart zookeeper
+    - wait for service restart
+  with_items:
+    - { section: "Service", option: "EnvironmentFile", value: "{{zookeeper.environment_file}}" }
+    - { section: "Service", option: "Restart", value: "always" }
+    - { section: "Service", option: "RestartSec", value: "30s" }
+    - { section: "Service", option: "ExecStart", value: "/usr/bin/zookeeper-server-start {{zookeeper.config_file}}" }
+    - { section: "Service", option: "ExecStop", value: "/usr/bin/zookeeper-server-stop" }
+    - { section: "Service", option: "ExecReload", value: "/usr/bin/zookeeper-server-stop && /usr/bin/zookeeper-server-start {{zookeeper.config_file}}" }
+
 - name: zookeeper configure service
   systemd:
     name: "{{zookeeper.service_name}}"

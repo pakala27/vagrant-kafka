@@ -2,8 +2,14 @@ zookeeper:
   user: cp-kafka
   group: confluent
   config_file: /etc/kafka/zookeeper.properties
+  environment_file: /etc/kafka/zookeeper.envFile
+  jmx_exporter_config: /etc/kafka/zookeeper_jmx_exporter.yml
   service_name: confluent-zookeeper
-  systemd_override: /etc/systemd/system/confluent-zookeeper.service.d
+  systemd_file: /usr/lib/systemd/system/confluent-zookeeper.service
+  log_dir: /var/log/confluent/zookeeper
+  data_dir: /var/lib/zookeeper
+  heap_opts: "-Xmx1000M"
+  systemd:
   config:
     maxClientCnxns: 0
     initLimit: 5
@@ -11,8 +17,6 @@ zookeeper:
     autopurge.snapRetainCount: 10
     autopurge.purgeInterval: 1
     dataDir: /var/lib/zookeeper
-  environment:
-    KAFKA_HEAP_OPTS: "-Xmx1000M"
   systemd:
     enabled: yes
     state: started
