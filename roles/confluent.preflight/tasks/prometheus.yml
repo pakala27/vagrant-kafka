@@ -1,0 +1,65 @@
+- name: create group
+  group:
+    name: "{{prometheus.group}}"
+- name: create user
+  user:
+    name: "{{prometheus.user}}"
+    comment: "Prometheus User"
+    system: yes
+    groups: "{{prometheus.group}},confluent"
+    append: yes
+
+- name: create prometheus directory
+  file:
+    path: "{{ prometheus.local_path }}"
+    owner: "{{ prometheus.user }}"
+    group: "{{ prometheus.group }}"
+    state: directory
+    mode: 0755
+
+- name: download prometheus JMX exporter (web)
+  get_url:
+    url: "https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/{{ prometheus.jmx_exporter_version }}/jmx_prometheus_javaagent-{{ prometheus.jmx_exporter_version }}.jar"
+    dest: "{{ prometheus.local_path }}/jmx_prometheus_javaagent-{{ prometheus.jmx_exporter_version }}.jar"
+    owner: "{{ prometheus.user }}"
+    group: "{{ prometheus.group }}"
+    mode: 0755
+ 
+- name: unarchive prometheus node exporter (with download)
+  unarchive:
+    src: "https://github.com/prometheus/node_exporter/releases/download/v{{ prometheus.node_exporter_version }}/node_exporter-{{ prometheus.node_exporter_version }}.linux-amd64.tar.gz"
+    dest: "{{ prometheus.local_path }}"
+    remote_src: yes
+    owner: "{{prometheus.user}}"
+    group: "{{prometheus.group}}"
+    keep_newer: yes
+    mode: 0755
+  notify:
+    - restart node exporter
+
+- name: create node exporter env file
+  template:
+    src: prometheus_node_exporter.envFile.j2
+    dest: "{{prometheus.node_exporter_environment_file}}"
+    mode: 0640
+    owner: "{{prometheus.user}}"
+    group: "{{prometheus.group}}"
+  notify:
+    - restart node exporter
+
+- name: create node exporter systemd file
+  template:
+    src: prometheus_node_exporter.service.j2
+    dest: "{{prometheus.node_exporter_systemd_file}}"
+    mode: 0640
+    owner: "{{prometheus.user}}"
+    group: "{{prometheus.group}}"
+  notify:
+    - restart node exporter
+    
+- name: configure service
+  systemd:
+    name: "{{prometheus.node_exporter_service_name}}"
+    enabled: "{{prometheus.systemd.enabled}}"
+    state: "{{prometheus.systemd.state}}"
+    daemon_reload: yes

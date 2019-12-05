@@ -1,0 +1,5 @@
+- name: restart node exporter
+  systemd:
+    name: "{{prometheus.node_exporter_service_name}}"
+    state: restarted
+    daemon_reload: yes

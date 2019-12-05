@@ -1,0 +1,14 @@
+prometheus:
+  node_exporter_service_name: prometheus_node_exporter
+  node_exporter_systemd_file: /usr/lib/systemd/system/prometheus_node_exporter.service
+  node_exporter_environment_file: /usr/lib/systemd/system/prometheus_node_exporter.envFile
+  jmx_exporter_version: "0.3.1"
+  prometheus_version: "2.3.2"
+  node_exporter_version: "0.16.0"
+  node_exporter_port: 9100
+  local_path: /usr/lib/prometheus
+  user: prometheus
+  group: prometheus
+  systemd:
+    enabled: yes
+    state: started
