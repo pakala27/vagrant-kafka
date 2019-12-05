@@ -1,6 +1,12 @@
 - name: restart kafka
   systemd:
-    name: "{{kafka.broker.service_name}}"
+    name: "{{kafkabroker.service_name}}"
     state: restarted
-- name: reload systemd
-  command: systemctl daemon-reload
+    daemon_reload: yes
+
+- name: wait for service restart
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: "{{ kafkabroker.port_sasl_plaintext }}"
+    timeout: 300
+    delay: 10

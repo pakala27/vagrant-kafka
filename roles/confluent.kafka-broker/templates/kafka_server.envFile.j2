@@ -1,0 +1,5 @@
+## Maintained by Ansible
+KAFKA_OPTS="-javaagent:{{ prometheus.local_path }}/jmx_prometheus_javaagent-{{ prometheus.jmx_exporter_version }}.jar={{kafkabroker.port_jmx}}:{{kafkabroker.jmx_exporter_config}}"
+KAFKA_HEAP_OPTS={{kafkabroker.heap_opts}}
+LOG_DIR={{kafkabroker.log_dir}}
+KAFKA_LOG4J_OPTS=-Dlog4j.configuration=file:{{kafkabroker.log4j_properties_file}}
