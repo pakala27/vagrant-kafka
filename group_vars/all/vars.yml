@@ -31,7 +31,7 @@ kafkabroker:
   firewalld_file: /etc/firewalld/services/confluent-kafka.xml
   service_name: confluent-kafka
   datadir: /var/lib/kafka/data
-  heap_opts: -Xmx1g
+  heap_opts: "-Xmx1000M"
   systemd:
     enabled: yes
     state: started
