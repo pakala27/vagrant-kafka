@@ -30,12 +30,12 @@ schema-registry:
     node3.example.com:
 control-center:
   hosts:
-    node3.example.com:
+    node4.example.com:
       confluent:
         control:
           center:
             config:
-              confluent.controlcenter.connect.cluster: node4.example.com:8083
+              confluent.controlcenter.connect.cluster: node3.example.com:8083
 connect-distributed:
   hosts:
     node3.example.com:
