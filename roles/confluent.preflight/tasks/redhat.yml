@@ -9,7 +9,7 @@
       - "java-1.8.0-openjdk-devel"
       - "rsync"
       - "nc"
-      - "jq"
+      # - "jq"
     state: latest
     
 - name: Disable Require TTY in Sudoers (required for ansible synchronize)
