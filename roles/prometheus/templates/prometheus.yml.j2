@@ -23,14 +23,12 @@ scrape_configs:
       - {{ host }}:{{ zookeeper.port_jmx }}
       {% endfor %}
 
- 
-
- - job_name: 'kafkarest'
+ {# - job_name: 'kafkarest'
    static_configs:
     - targets:
       {% for host in groups['kafka-rest'] %}
       - {{ host }}:{{ kafkarest.port_jmx }}
-      {% endfor %}
+      {% endfor %} #}
 
  - job_name: 'schemaregistry'
    static_configs:
@@ -46,9 +44,9 @@ scrape_configs:
       - {{ host }}:{{ ksql.port_jmx }}
       {% endfor %} #}
 
- - job_name: 'connect'
+ {# - job_name: 'connect'
    static_configs:
     - targets:
       {% for host in groups['connect-distributed'] %}
       - {{ host }}:{{ kafkaconnect.port_jmx }}
-      {% endfor %}
+      {% endfor %} #}

@@ -1,6 +1,7 @@
 kafkarest:
   user: cp-kafka-rest
   group: confluent
+  port_jmx: 18002
   config_file: /etc/kafka-rest/kafka-rest.properties
   service_name: confluent-kafka-rest
   systemd_override: /etc/systemd/system/confluent-kafka-rest.service.d
