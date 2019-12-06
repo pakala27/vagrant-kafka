@@ -1,0 +1,74 @@
+zookeeper:
+  user: cp-kafka
+  group: confluent
+  config_file: /etc/kafka/zookeeper.properties
+  environment_file: /etc/kafka/zookeeper.envFile
+  jmx_exporter_config: /etc/kafka/zookeeper_jmx_exporter.yml
+  service_name: confluent-zookeeper
+  systemd_file: /usr/lib/systemd/system/confluent-zookeeper.service
+  log_dir: /var/log/confluent/zookeeper
+  data_dir: /var/lib/zookeeper
+  heap_opts: "-Xmx1000M"
+  clientPort: 2181
+  leaderPort: 2888
+  electionPort: 3888
+  port_jmx: 12181
+  systemd:
+    enabled: yes
+    state: started
+
+kafkabroker:
+  user: cp-kafka
+  group: confluent
+  port_plaintext: 9092
+  port_jmx: 18000
+  config_file: /etc/kafka/server.properties
+  jmx_exporter_config: /etc/kafka/kafka_jmx_exporter.yml
+  log_dir: /var/log/kafka
+  log4j_properties_file: /etc/kafka/log4j.properties
+  systemd_file: /usr/lib/systemd/system/confluent-kafka.service
+  environment_file: /etc/kafka/server.envFile
+  firewalld_file: /etc/firewalld/services/confluent-kafka.xml
+  service_name: confluent-kafka
+  datadir: /var/lib/kafka/data
+  heap_opts: "-Xmx1000M"
+  systemd:
+    enabled: yes
+    state: started
+
+schemaregistry:
+  user: cp-schema-registry
+  group: confluent
+  port: 8081
+  port_jmx: 18081
+  config_file: /etc/schema-registry/schema-registry.properties
+  systemd_file: /usr/lib/systemd/system/confluent-schema-registry.service
+  jmx_exporter_config: /etc/schema-registry/schema-registry_jmx_exporter.yml
+  jaas_conf: /etc/schema-registry/schema-registry_jaas.conf
+  environment_file: /etc/schema-registry/schema-registry.envFile
+  service_name: confluent-schema-registry
+  log_dir: /var/log/confluent/schema-registry
+  heap_opts: -Xmx1g
+  firewalld_file: /etc/firewalld/services/confluent-schema-registry.xml
+  systemd:
+    enabled: yes
+    state: started
+
+prometheus:
+  node_exporter_service_name: prometheus_node_exporter
+  node_exporter_systemd_file: /usr/lib/systemd/system/prometheus_node_exporter.service
+  node_exporter_environment_file: /usr/lib/systemd/system/prometheus_node_exporter.envFile
+  jmx_exporter_version: "0.3.1"
+  prometheus_version: "2.14.0"
+  node_exporter_version: "0.16.0"
+  node_exporter_port: 9100
+  local_path: /usr/lib/prometheus
+  user: prometheus
+  group: prometheus
+  service_name: prometheus
+  systemd_file: /usr/lib/systemd/system/prometheus.service
+  data_dir: /var/lib/prometheus_data
+  log_dir: /var/log/prometheus
+  systemd:
+    enabled: yes
+    state: started

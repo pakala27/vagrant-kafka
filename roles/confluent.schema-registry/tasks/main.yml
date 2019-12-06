@@ -1,61 +1,90 @@
 - name: schema-registry create group
   group:
-    name: "{{schema.registry.group}}"
+    name: "{{schemaregistry.group}}"
+
 - name: schema-registry create user
   user:
-    name: "{{schema.registry.user}}"
+    name: "{{schemaregistry.user}}"
     comment: "Schema Registry User"
     system: yes
-    group: "{{schema.registry.group}}"
+    group: "{{schemaregistry.group}}"
+
 - name: schema-registry create config
   template:
     src: schema-registry.properties.j2
-    dest: "{{schema.registry.config_file}}"
+    dest: "{{schemaregistry.config_file}}"
     mode: 0640
-    owner: "{{schema.registry.user}}"
-    group: "{{schema.registry.group}}"
+    owner: "{{schemaregistry.user}}"
+    group: "{{schemaregistry.group}}"
   when: security_mode == "plaintext"
   notify:
     - restart schema-registry
-- name: schema-registry create config
+
+# - name: schema-registry create config
+#   template:
+#     src: schema-registry_ssl.properties.j2
+#     dest: "{{schema.registry.config_file}}"
+#     mode: 0640
+#     owner: "{{schema.registry.user}}"
+#     group: "{{schema.registry.group}}"
+#   when: security_mode == "ssl"
+#   notify:
+#     - restart schema-registry
+
+# - name: schema-registry create config
+#   template:
+#     src: schema-registry_sasl_ssl.properties.j2
+#     dest: "{{schema.registry.config_file}}"
+#     mode: 0640
+#     owner: "{{schema.registry.user}}"
+#     group: "{{schema.registry.group}}"
+#   when: security_mode == "sasl_ssl"
+#   notify:
+#     - restart schema-registry
+
+- name: schema-registry jmx exporter config
   template:
-    src: schema-registry_ssl.properties.j2
-    dest: "{{schema.registry.config_file}}"
+    src: schema-registry_jmx_exporter.yml.j2
+    dest: "{{schemaregistry.jmx_exporter_config}}"
     mode: 0640
-    owner: "{{schema.registry.user}}"
-    group: "{{schema.registry.group}}"
-  when: security_mode == "ssl"
+    owner: "{{schemaregistry.user}}"
+    group: "{{schemaregistry.group}}"
   notify:
     - restart schema-registry
-- name: schema-registry create config
+    - wait for service restart
+    
+- name: schema-registry environment file
   template:
-    src: schema-registry_sasl_ssl.properties.j2
-    dest: "{{schema.registry.config_file}}"
+    src: schema-registry.envFile.j2
+    dest: "{{schemaregistry.environment_file}}"
     mode: 0640
-    owner: "{{schema.registry.user}}"
-    group: "{{schema.registry.group}}"
-  when: security_mode == "sasl_ssl"
+    owner: "{{schemaregistry.user}}"
+    group: "{{schemaregistry.group}}"
   notify:
     - restart schema-registry
-- name: create systemd override file
-  file:
-    path: "{{schema.registry.systemd_override}}"
-    owner: "{{schema.registry.user}}"
-    group: "{{schema.registry.group}}"
-    state: directory
-    mode: 0640
-- name: write environment variables
-  template:
-    src: environment.j2
-    dest: "{{schema.registry.systemd_override}}/override.conf"
-    mode: 0640
-    owner: "{{schema.registry.user}}"
-    group: "{{schema.registry.group}}"
+    - wait for service restart
+
+- name: schema-registry configure service - ini file
+  ini_file:
+    path: "{{schemaregistry.systemd_file}}"
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    backup: yes
+    no_extra_spaces: yes
   notify:
-    - reload systemd
     - restart schema-registry
+    - wait for service restart
+  with_items:
+    - { section: "Service", option: "EnvironmentFile", value: "{{schemaregistry.environment_file}}" }
+    - { section: "Service", option: "Restart", value: "always" }
+    - { section: "Service", option: "RestartSec", value: "0s" }
+    - { section: "Service", option: "ExecStart", value: "/usr/bin/schema-registry-start {{schemaregistry.config_file}}" }
+    - { section: "Service", option: "ExecStop", value: "/usr/bin/schema-registry-stop" }
+    - { section: "Service", option: "ExecReload", value: "/usr/bin/schema-registry-stop && /usr/bin/schema-registry-start {{schemaregistry.config_file}}" }
+
 - name: schema-registry configure service
   systemd:
-    name: "{{schema.registry.service_name}}"
-    enabled: "{{schema.registry.systemd.enabled}}"
-    state: "{{schema.registry.systemd.state}}"
+    name: "{{schemaregistry.service_name}}"
+    enabled: "{{schemaregistry.systemd.enabled}}"
+    state: "{{schemaregistry.systemd.state}}"

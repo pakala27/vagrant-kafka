@@ -7,42 +7,44 @@ all:
 preflight:
   hosts:
     node1.example.com:
+      ip: 192.168.50.21
     node2.example.com:
+      ip: 192.168.50.22
     node3.example.com:
+      ip: 192.168.50.23
+    node4.example.com:
+      ip: 192.168.50.24
 zookeeper:
   hosts:
-    node1.example.com:
+    node3.example.com:
 broker:
   hosts:
     node1.example.com:
-      kafka:
-        broker:
-          id: 1
+      kafkabroker:
+        id: 1
     node2.example.com:
-      kafka:
-        broker:
-          id: 2
-    node3.example.com:
-      kafka:
-        broker:
-          id: 3
+      kafkabroker:
+        id: 2
 schema-registry:
   hosts:
-    node2.example.com:
-control-center:
-  hosts:
     node3.example.com:
-      confluent:
-        control:
-          center:
-            config:
-              confluent.controlcenter.connect.cluster: node3.example.com:8083
+# control-center:
+#   hosts:
+#     node4.example.com:
+#       confluent:
+#         control:
+#           center:
+#             config:
+#               confluent.controlcenter.connect.cluster: node3.example.com:8083
 connect-distributed:
   hosts:
-    node2.example.com:
+    node3.example.com:
 kafka-rest:
   hosts:
     node3.example.com:
-ksql:
+# ksql:
+#   hosts:
+#     node3.example.com:
+prometheus:
   hosts:
-    node1.example.com:
+    node4.example.com:

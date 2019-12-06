@@ -3,30 +3,51 @@
   - import_role:
       name: confluent.preflight
 - hosts: zookeeper
+  serial:
+  - 1
   tasks:
   - import_role:
       name: confluent.zookeeper
+
 - hosts: broker
+  serial:
+  - 1
   tasks:
   - import_role:
       name: confluent.kafka-broker
+
 - hosts: schema-registry
+  serial:
+  - 1
   tasks:
   - import_role:
       name: confluent.schema-registry
+
 - hosts: connect-distributed
+  serial:
+  - 1
   tasks:
   - import_role:
       name: confluent.connect-distributed
-- hosts: ksql
-  tasks:
-  - import_role:
-      name: confluent.ksql
-- hosts: control-center
-  tasks:
-  - import_role:
-      name: confluent.control-center
+# - hosts: ksql
+#   tasks:
+#   - import_role:
+#       name: confluent.ksql
+# - hosts: control-center
+#   serial:
+#   - 1
+#   tasks:
+#   - import_role:
+#       name: confluent.control-center
+
 - hosts: kafka-rest
+  serial:
+  - 1
   tasks:
   - import_role:
       name: confluent.kafka-rest
+
+- hosts: prometheus
+  tasks:
+  - import_role:
+      name: prometheus

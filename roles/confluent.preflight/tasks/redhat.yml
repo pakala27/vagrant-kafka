@@ -1,7 +1,17 @@
-- name: Install Java
+- name: create confluent group
+  group:
+    name: "confluent"
+
+- name: Install additional packages (java, rsync, netcat)
   yum:
-    name: "java-1.8.0-openjdk"
+    name: 
+      - "java-1.8.0-openjdk"
+      - "java-1.8.0-openjdk-devel"
+      - "rsync"
+      - "nc"
+      # - "jq"
     state: latest
+    
 - name: Disable Require TTY in Sudoers (required for ansible synchronize)
   lineinfile:
     path: /etc/sudoers

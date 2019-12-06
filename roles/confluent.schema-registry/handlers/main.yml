@@ -1,6 +1,12 @@
 - name: restart schema-registry
   systemd:
-    name: "{{schema.registry.service_name}}"
+    name: "{{schemaregistry.service_name}}"
     state: restarted
-- name: reload systemd
-  command: systemctl daemon-reload
+    daemon_reload: yes
+
+- name: wait for service restart
+  wait_for:
+    host: "{{ inventory_hostname }}"
+    port: "{{ schemaregistry.port }}"
+    timeout: 300
+    delay: 10
