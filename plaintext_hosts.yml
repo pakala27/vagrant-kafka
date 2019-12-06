@@ -7,11 +7,13 @@ all:
 preflight:
   hosts:
     node1.example.com:
-      ip: 192.168.50.20
+      ip: 192.168.50.21
     node2.example.com:
-      ip: 192.168.50.20
+      ip: 192.168.50.22
     node3.example.com:
-      ip: 192.168.50.20
+      ip: 192.168.50.23
+    node4.example.com:
+      ip: 192.168.50.24
 zookeeper:
   hosts:
     node3.example.com:
@@ -33,7 +35,7 @@ control-center:
         control:
           center:
             config:
-              confluent.controlcenter.connect.cluster: node3.example.com:8083
+              confluent.controlcenter.connect.cluster: node4.example.com:8083
 connect-distributed:
   hosts:
     node3.example.com:
