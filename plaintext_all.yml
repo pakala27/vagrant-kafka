@@ -33,12 +33,12 @@
 #   tasks:
 #   - import_role:
 #       name: confluent.ksql
-- hosts: control-center
-  serial:
-  - 1
-  tasks:
-  - import_role:
-      name: confluent.control-center
+# - hosts: control-center
+#   serial:
+#   - 1
+#   tasks:
+#   - import_role:
+#       name: confluent.control-center
 
 - hosts: kafka-rest
   serial:
@@ -46,3 +46,8 @@
   tasks:
   - import_role:
       name: confluent.kafka-rest
+
+- hosts: prometheus
+  tasks:
+  - import_role:
+      name: prometheus

@@ -28,14 +28,14 @@ broker:
 schema-registry:
   hosts:
     node3.example.com:
-control-center:
-  hosts:
-    node4.example.com:
-      confluent:
-        control:
-          center:
-            config:
-              confluent.controlcenter.connect.cluster: node3.example.com:8083
+# control-center:
+#   hosts:
+#     node4.example.com:
+#       confluent:
+#         control:
+#           center:
+#             config:
+#               confluent.controlcenter.connect.cluster: node3.example.com:8083
 connect-distributed:
   hosts:
     node3.example.com:
@@ -45,3 +45,6 @@ kafka-rest:
 # ksql:
 #   hosts:
 #     node3.example.com:
+prometheus:
+  hosts:
+    node4.example.com:
