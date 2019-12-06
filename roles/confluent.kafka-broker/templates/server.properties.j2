@@ -22,11 +22,12 @@ transaction.state.log.min.isr: 2
 transaction.state.log.replication.factor: 2
 zookeeper.connection.timeout.ms: 6000
 metric.reporters: io.confluent.metrics.reporter.ConfluentMetricsReporter
-confluent.metrics.reporter.bootstrap.servers: "{{inventory_hostname}}:{{kafkabroker.port_plaintext}}"
+#confluent.metrics.reporter.bootstrap.servers: {{inventory_hostname}}:{{kafkabroker.port_plaintext}}
+confluent.metrics.reporter.bootstrap.servers:{% for host in groups['broker'] %}{% if loop.index > 1%},{% endif %}{{ host }}:{{kafkabroker.port_plaintext}}{% endfor %}
 confluent.metrics.reporter.topic.replicas: 2
 ssl.endpoint.identification.algorithm: ""
 confluent.metrics.reporter.ssl.endpoint.identification.algorithm: ""
-delete.topic.enable: "true"
+delete.topic.enable: true
 
 #Confluent Support
 confluent.support.metrics.enable={{confluent.support.metrics_enabled|bool|lower}}
